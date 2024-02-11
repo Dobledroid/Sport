@@ -1,0 +1,62 @@
+/* Alerts */
+.alert-heading {
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+  font-size: 20px;
+}
+
+/* Close Button */
+.btn-close {
+  background-size: 25%;
+}
+
+.btn-close:focus {
+  outline: 0;
+  box-shadow: none;
+}
+
+.login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-bottom: 8px;
+  }
+  
+  input {
+    padding: 8px;
+    margin-bottom: 16px;
+  }
+  button {
+    background-color: #F2CB05;
+    color: black; /* Color de texto negro */
+    border: 1px solid #E0B600; /* Contorno */
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: transparent;
+    color: #E0B600;
+  }
+  
+  .additional-options a {
+    background-color: transparent;
+    color: #E0B600; /* Color del texto */
+  }
+  
+  .additional-options a:hover {
+    background-color: transparent;
+    color: #E0B600; /* Cambiado para un tono más oscuro al hacer hover */
+  }
