@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../../Esquema/Header';
 import Footer from '../../../Esquema/Footer';
 import './AdmProductos.css';
@@ -14,6 +14,8 @@ const AdmProductos = () => {
   const [prodEditando, setProdEditando] = useState(null);
   const [prodEliminando, setProdEliminando] = useState(null);
   const [recuperado, setRecuperado] = useState(false);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchProductos = async () => {
@@ -71,7 +73,7 @@ const AdmProductos = () => {
           <section>
             <div className="row">
               <div className="card">
-                
+
                 {cargando ? (
                   <div>Cargando productos...</div>
                 ) : mostrarComponente === "editar" ? (
@@ -87,50 +89,48 @@ const AdmProductos = () => {
                     confirmarEliminar={confirmarEliminar}
                     cancelarEliminar={() => setMostrarComponente(null)}
                   />
-                ) : mostrarComponente === "agregar" ? (
-                  <AgregarProducto
-                    guardarRecuperado={setRecuperado}
-                    cerrarComponente={() => setMostrarComponente(null)}
-                  />
+
                 ) : (
                   <div className="card-body">
-                  <div className="d-flex justify-content-between mb-0">
-                    <h5 className="card-title">Registros de la tabla Usuarios</h5>
+                    <div className="d-flex justify-content-between mb-0">
+                      <h5 className="card-title">Registros de la tabla Usuarios</h5>
 
-                    <p className="card-title">
-                      <button to="/AgregarProducto" onClick={() => setMostrarComponente("agregar")} className="btn btn-primary">
-                        Agregar
-                      </button>
-                    </p>
-                  </div>
+                      <p className="card-title">
+                        <button className='btn btn-primary' onClick={() => navigate('/agregarProducto')}>
+                          Agregar
+                        </button>
+                      </p>
+                    </div>
 
-                  <div className="table-responsive">
-                    <table className="table table-hover table-bordered">
-                      <thead>
-                        <tr>
-                          <th scope="col">Id</th>
-                          <th scope="col">Nombre</th>
-                          <th scope="col">Descripción</th>
-                          <th scope="col">Precio</th>
-                          <th scope="col">Precio Descuesto</th>
-                          <th scope="col">Categoría</th>
-                          <th scope="col">Subcategoría</th>
-                          <th scope="col">Marca</th>
-                          <th scope="col">Acciones</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {productos.map(producto => (
-                          <tr key={producto.ID_producto}>
-                            <th scope="row">{producto.ID_producto}</th>
-                            <td>{producto.nombre.slice(0, 150)}...</td>
-                            <td>{producto.descripcion.slice(0, 150)}...</td>
-                            <td>{producto.precio}</td>
-                            <td>{producto.precioDescuento}</td>
-                            <td>{producto.nombreCategoria}</td>
-                            <td>{producto.nombreSubcategoria}</td>
-                            <td>{producto.nombreMarca}</td>
-                            {/* <td className="d-flex justify-content-center">
+                    <div className="table-responsive">
+                      <table className="table table-hover table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Precio Descuesto</th>
+                            <th scope="col">Existencias</th>
+                            <th scope="col">Categoría</th>
+                            <th scope="col">Subcategoría</th>
+                            <th scope="col">Marca</th>
+                            <th scope="col">Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {productos.map(producto => (
+                            <tr key={producto.ID_producto}>
+                              <th scope="row">{producto.ID_producto}</th>
+                              <td>{producto.nombre.slice(0, 50)}...</td>
+                              <td>{producto.descripcion.slice(0, 50)}...</td>
+                              <td>{producto.precio}</td>
+                              <td>{producto.precioDescuento}</td>
+                              <td>{producto.existencias}</td>
+                              <td>{producto.nombreCategoria}</td>
+                              <td>{producto.nombreSubcategoria}</td>
+                              <td>{producto.nombreMarca}</td>
+                              {/* <td className="d-flex justify-content-center">
                               <Link to={`/EditarProducto/${producto.ID_producto}`} className="btn btn-primary btn-sm me-2">
                                 <i className="bi bi-pencil-fill text-dark"></i>
                               </Link>
@@ -138,22 +138,21 @@ const AdmProductos = () => {
                                 <i className="bi bi-trash-fill text-dark"></i>
                               </span>
                             </td> */}
-                            <td>
-                            <button className="btn btn-warning" onClick={() => handleEditar(producto)}>
-                              Editar
-                            </button>
-                          </td>
-                          <td>
-                            <button className="btn btn-danger" onClick={() => handleEliminar(producto)}>
-                              Eliminar
-                            </button>
-                          </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                              <td>
+                                <button className="btn btn-warning mb-1" onClick={() => handleEditar(producto)}>
+                                  Editar
+                                </button>
+                                <button className="btn btn-danger mt-1" onClick={() => handleEliminar(producto)}>
+                                  Eliminar
+                                </button>
+                              </td>
+
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
-                </div>
                 )}
               </div>
             </div>

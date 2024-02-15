@@ -47,7 +47,10 @@ import EditarProducto from './Administracion/Productos/EditarProducto';
 
 
 import Error404 from './Validaciones/Error404/Error404';
-import Error500 from './Validaciones/Error500/Error500';
+// import Error500 from './Validaciones/Error500/Error500';
+
+
+import subirImagen from './Administracion/Productos/subirImagen';
 // import Error from './Validaciones/Error404/Error';
 const Rutas = () => {
   return (
@@ -88,8 +91,11 @@ const Rutas = () => {
         <Route path='/AgregarProducto' Component={AgregarProducto}></Route>
         <Route path='/EditarProducto' Component={EditarProducto}></Route>
 
+
+        <Route path='/subirImagen' Component={ subirImagen }></Route>
+
         <Route path='*' Component={ Error404 }></Route>
-        <Route path='/error-500' Component={ Error500 }></Route>
+        {/* <Route path='/error-500' Component={ Error500 }></Route> */}
 
 
         {/* 

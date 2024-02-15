@@ -170,7 +170,6 @@ const ResetPassword = () => {
                           />
                         </div>
                       </div>
-
                       <div class="col-12">
                         <button class="btn btn-primary w-100" type="submit">Acceso</button>
                       </div>
@@ -178,18 +177,13 @@ const ResetPassword = () => {
                         <Alert type="danger" message={alert.message} onClose={closeAlert} />
                       )}
                     </form>
-
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
-
         </section>
-
       </div>
-
       <Footer />
     </div>
   );
