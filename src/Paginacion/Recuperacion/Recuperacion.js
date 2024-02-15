@@ -109,7 +109,7 @@ const Recuperacion = () => {
                         <Alert type="danger" message={alert.message} onClose={closeAlert} />
                       )}
                       <div class="col-12">
-                        <p class="small mb-0">¿Ya tienes una cuenta? <Link to="/registro">Inicia sesión</Link></p>
+                        <p class="small mb-0">¿Ya tienes una cuenta? <Link to="/login">Inicia sesión</Link></p>
                       </div>
 
                     </form>
