@@ -2,10 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '../../Esquema/Header.js';
 import Footer from '../../Esquema/Footer';
-import Alert from '../Validaciones/Alerts/Alert.js';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import './Registro.css';
-import ReCAPTCHA from 'react-google-recaptcha';
 
 const Registro = () => {
   const [nombre, setNombre] = useState('');
@@ -13,77 +10,89 @@ const Registro = () => {
   const [segundoApellido, setSegundoApellido] = useState('');
   const [email, setEmail] = useState('');
   const [contrasena, setContrasena] = useState('');
-  const [confirmarContraseña, setConfirmarContraseña] = useState('');
+  const [confirmarContrasena, setConfirmarContrasena] = useState('');
   const [alerta, setAlerta] = useState(null);
-  const [mostrarContraseña, setMostrarContraseña] = useState(false);
-  const [mostrarConfirmarContraseña, setMostrarConfirmarContraseña] = useState(false);
-  const [mostrarCaptcha, setMostrarCaptcha] = useState(false); // Nuevo estado para controlar la visibilidad del ReCAPTCHA
+  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar la contraseña
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Estado para mostrar/ocultar la confirmación de la contraseña
   const navigate = useNavigate();
   const captcha = useRef(null);
 
-  const onChange = async () => {
-    try {
-      const value = await captcha.current.getValue();
-      //console.log('Captcha value:', value);
-      // Aquí puedes realizar cualquier acción adicional con el valor del ReCAPTCHA, como enviarlo al servidor
-    } catch (error) {
-      console.error('Error al obtener el valor del ReCAPTCHA:', error);
+  const validarCorreoElectronico = (correo) => {
+    // Expresión regular para validar un correo electrónico
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(correo).toLowerCase());
+  };
+
+  const validacionesContraseña = (password, confirmacion) => {
+    const mayusculas = /[A-Z]/;
+    const minusculas = /[a-z]/;
+    const numeros = /\d/;
+    const caracteres = /[!@#$%^&*()\-_=+{};:,<.>]/;
+
+    const errors = [];
+
+    if (!mayusculas.test(password)) {
+      errors.push("La contraseña debe tener al menos una letra mayúscula.");
     }
+
+    if (!minusculas.test(password)) {
+      errors.push("La contraseña debe tener al menos una letra minúscula.");
+    }
+
+    if (!numeros.test(password)) {
+      errors.push("La contraseña debe tener al menos un número.");
+    }
+
+    if (!caracteres.test(password)) {
+      errors.push("La contraseña debe tener al menos un carácter especial.");
+    }
+
+    if (password !== confirmacion) {
+      errors.push("Las contraseñas no coinciden.");
+    }
+
+    return errors;
   };
 
   const handleRegistro = async (event) => {
     event.preventDefault();
 
-    // Validación de campos vacíos
+    console.log("Registrando usuario...");
+
     if (
       nombre.trim() === '' ||
       primerApellido.trim() === '' ||
       segundoApellido.trim() === '' ||
       email.trim() === '' ||
       contrasena === '' ||
-      confirmarContraseña === ''
+      confirmarContrasena === ''
     ) {
-      setAlerta({ type: 'danger', message: 'Por favor completa todos los campos.' });
+      console.log("Faltan campos por completar");
+      setAlerta('Por favor completa todos los campos.');
       return;
     }
 
-    // Validación de que nombre, primer apellido y segundo apellido solo contengan texto
-    const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-    if (!nameRegex.test(nombre) || !nameRegex.test(primerApellido) || !nameRegex.test(segundoApellido)) {
-      setAlerta({ type: 'danger', message: 'Los campos de nombre, primer apellido y segundo apellido solo pueden contener letras.' });
+    // Validar el formato del correo electrónico
+    if (!validarCorreoElectronico(email)) {
+      setAlerta('Por favor ingrese una dirección de correo electrónico válida.');
       return;
     }
 
-    // Validación de formato de correo electrónico
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setAlerta({ type: 'danger', message: 'Por favor ingresa un correo electrónico válido.' });
+    const passwordErrors = validacionesContraseña(contrasena, confirmarContrasena);
+    if (passwordErrors.length > 0) {
+      setAlerta(passwordErrors.join(' '));
       return;
     }
 
-    // Validación de contraseña segura
-    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!strongPasswordRegex.test(contrasena)) {
-      setAlerta({ type: 'danger', message: 'La contraseña debe tener al menos 8 caracteres, incluyendo al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.' });
-      return;
-    }
-
-    // Validación de contraseña y confirmación de contraseña
-    if (contrasena !== confirmarContraseña) {
-      setAlerta({ type: 'danger', message: 'Las contraseñas no coinciden.' });
-      return;
-    }
-    setMostrarCaptcha(true);
-
-    // Si todas las validaciones pasan, muestra el ReCAPTCHA
-    ///Validar si el ReCAPTCHA ha sido completado
     // if (!captcha.current || !captcha.current.getValue()) {
-    //   setAlerta({ type: 'danger', message: 'Por favor completa el ReCAPTCHA.' });
+    //   console.log("El ReCAPTCHA no está completo");
+    //   setAlerta('Por favor completa el ReCAPTCHA.');
     //   return;
     // }
 
+    console.log("Realizando solicitud de registro...");
     try {
-      const response = await fetch('http://localhost:3001/api/users', {
+      const response = await fetch('http://localhost:3001/api/users/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -92,87 +101,101 @@ const Registro = () => {
           nombre,
           primerApellido,
           segundoApellido,
-          correoElectronico: email, // Asegúrate de enviar el correo con el nombre esperado en el backend
+          correoElectronico: email,
           contrasena,
         }),
       });
 
       if (response.ok) {
+        console.log("Usuario registrado exitosamente");
+        
         navigate('/login');
       } else {
+        console.log("Error al registrar usuario");
         const errorData = await response.json();
-        setAlerta({ type: 'danger', message: errorData.msg });
+        setAlerta(errorData.msg);
       }
     } catch (error) {
       console.error('Error al crear usuario:', error);
-      setAlerta({ type: 'danger', message: 'Error al crear usuario. Por favor, intenta nuevamente.' });
+      setAlerta('Error al crear usuario. Por favor, intenta nuevamente.');
     }
   };
 
   return (
     <div>
       <Header />
-      <div class="container">
-
-        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
-          <div class="container">
-            <div class="row justify-content-center">
-              <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
-
-                <div class="card mb-3">
-
-                  <div class="card-body">
-
-                    <div class="pt-4 pb-2">
-                      <h5 class="card-title text-center pb-0 fs-4">Crea una cuenta</h5>
-                      <p class="text-center small">Ingrese sus datos personales para crear una cuenta</p>
+      <div className="container">
+        <section className="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                <div className="card mb-3">
+                  <div className="card-body">
+                    <div className="pt-4 pb-2">
+                      <h5 className="card-title text-center pb-0 fs-4">Crea una cuenta</h5>
+                      <p className="text-center small">Ingrese sus datos para crear una cuenta</p>
                     </div>
-
-                    <form class="row g-3 needs-validation" novalidate>
-                      <div class="col-12">
-                        <label for="yourName" class="form-label">Su nombre</label>
-                        <input type="text" name="name" class="form-control" id="yourName" required />
-                          <div class="invalid-feedback">¡Por favor, escriba su nombre!</div>
+                    <form onSubmit={handleRegistro} className="row g-3 needs-validation" noValidate>
+                      <div className="col-12">
+                        <label htmlFor="yourName" className="form-label">Nombre</label>
+                        <input type="text" name="name" className="form-control" id="yourName" required value={nombre} onChange={(e) => setNombre(e.target.value)} />
+                        <div className="invalid-feedback">¡Por favor, escriba su nombre!</div>
                       </div>
-
-                      <div class="col-12">
-                        <label for="yourEmail" class="form-label">Tu correo electrónico</label>
-                        <input type="email" name="email" class="form-control" id="yourEmail" required />
-                          <div class="invalid-feedback">¡Ingrese una dirección de correo electrónico válida!</div>
+                      <div className="col-12">
+                        <label htmlFor="yourApePat" className="form-label">Apellido Paterno</label>
+                        <input type="text" name="ApePat" className="form-control" id="ApePat" required value={primerApellido} onChange={(e) => setPrimerApellido(e.target.value)} />
+                        <div className="invalid-feedback">¡Por favor, escriba su Apellido Paterno!</div>
                       </div>
-
-                      <div class="col-12">
-                        <label for="yourUsername" class="form-label">Nombre de usuario</label>
-                        <div class="input-group has-validation">
-                          <span class="input-group-text" id="inputGroupPrepend">@</span>
-                          <input type="text" name="username" class="form-control" id="yourUsername" required />
-                            <div class="invalid-feedback">Por favor, elija un nombre de usuario.</div>
+                      <div className="col-12">
+                        <label htmlFor="yourApeMat" className="form-label">Apellido Materno</label>
+                        <input type="text" name="ApeMat" className="form-control" id="ApeMat" required value={segundoApellido} onChange={(e) => setSegundoApellido(e.target.value)} />
+                        <div className="invalid-feedback">¡Por favor, escriba su Apellido Materno!</div>
+                      </div>
+                      <div className="col-12">
+                        <label htmlFor="yourEmail" className="form-label">Correo Electrónico</label>
+                        <input type="email" name="email" className="form-control" id="yourEmail" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <div className="invalid-feedback">¡Ingrese una dirección de correo electrónico válida!</div>
+                      </div>
+                      <div className="col-12">
+                        <label htmlFor="yourPassword" className="form-label">Contraseña</label>
+                        <div className="input-group">
+                          <input type={showPassword ? "text" : "password"} name="password" className="form-control" id="yourPassword" required value={contrasena} onChange={(e) => setContrasena(e.target.value)} />
+                          <button className="btn btn-outline-secondary" type="button" onClick={() => setShowPassword(!showPassword)}>
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                          </button>
                         </div>
+                        <div className="invalid-feedback">¡Por favor, introduzca su contraseña!</div>
                       </div>
-
-                      <div class="col-12">
-                        <label for="yourPassword" class="form-label">Contraseña</label>
-                        <input type="password" name="password" class="form-control" id="yourPassword" required />
-                          <div class="invalid-feedback">¡Por favor, introduzca su contraseña!</div>
+                      <div className="col-12">
+                        <label htmlFor="yourPasswordConfirm" className="form-label">Confirmar Contraseña</label>
+                        <div className="input-group">
+                          <input type={showConfirmPassword ? "text" : "password"} name="PasswordConfirm" className="form-control" id="PasswordConfirm" required value={confirmarContrasena} onChange={(e) => setConfirmarContrasena(e.target.value)} />
+                          <button className="btn btn-outline-secondary" type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                            {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                          </button>
+                        </div>
+                        <div className="invalid-feedback">¡Por favor, introduzca su contraseña!</div>
                       </div>
-
-                      <div class="col-12">
-                        <button class="btn btn-primary w-100" type="submit">Crear una cuenta</button>
+                      <div className="col-12">
+                        <button className="btn btn-primary w-100" type="submit">Crear una cuenta</button>
                       </div>
-                      <div class="col-12">
-                        <p class="small mb-0">¿Ya tienes una cuenta? <Link to="/login">Acceso</Link></p>
-                      </div>
+                      {alerta && (
+                        <div className="col-12 mt-2">
+                          <div className="alert alert-danger" role="alert">
+                            {alerta}
+                          </div>
+                        </div>
+                      )}
                     </form>
-
+                    <div className="col-12">
+                      <p className="small mb-0">¿Ya tienes una cuenta? <Link to="/login">Acceso</Link></p>
+                    </div>
                   </div>
                 </div>
-
               </div>
             </div>
           </div>
-
         </section>
-
       </div>
       <Footer />
     </div>

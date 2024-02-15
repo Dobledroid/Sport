@@ -93,7 +93,6 @@ const Recuperacion = () => {
                           <input type="email" 
                             name="email" 
                             required 
-                            maxLength="28" 
                             class="form-control"
                             placeholder="Ingrese tu correo electrónico"
                             value={correo}
@@ -109,7 +108,7 @@ const Recuperacion = () => {
                         <Alert type="danger" message={alert.message} onClose={closeAlert} />
                       )}
                       <div class="col-12">
-                        <p class="small mb-0">¿Ya tienes una cuenta? <Link to="/registro">Inicia sesión</Link></p>
+                        <p class="small mb-0">¿Ya tienes una cuenta? <Link to="/login">Inicia sesión</Link></p>
                       </div>
 
                     </form>

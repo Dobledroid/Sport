@@ -162,7 +162,6 @@ const Login = () => {
                             type="email"
                             placeholder="Ingresa su correo"
                             name="email"
-                            required maxLength="28"
                             value={correo}
                             onChange={(event) => setCorreo(event.target.value)} />
                           <div class="invalid-feedback">Por favor, ingrese su nombre de usuario.</div>
@@ -183,7 +182,6 @@ const Login = () => {
                             type={mostrarContrasena ? 'text' : 'password'}
                             placeholder="Ingrese su contraseña"
                             name="password"
-                            required maxLength="28"
                             // minLength="8"
                             value={password}
                             onChange={(event) => setPassword(event.target.value)}
