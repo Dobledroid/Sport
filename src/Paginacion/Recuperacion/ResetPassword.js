@@ -47,7 +47,7 @@ const ResetPassword = () => {
       errors.push("La contraseña debe tener al menos un carácter especial.");
     }
 
-    if (password != confirmacion) {
+    if (password !== confirmacion) {
       errors.push("Las contraseñas no coinciden.");
     }
 
