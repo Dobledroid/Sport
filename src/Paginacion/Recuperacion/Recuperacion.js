@@ -93,7 +93,6 @@ const Recuperacion = () => {
                           <input type="email" 
                             name="email" 
                             required 
-                            maxLength="28" 
                             class="form-control"
                             placeholder="Ingrese tu correo electrónico"
                             value={correo}

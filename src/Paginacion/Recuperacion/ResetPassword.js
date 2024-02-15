@@ -136,7 +136,7 @@ const ResetPassword = () => {
                             type={mostrarContrasena ? 'text' : 'password'}
                             class="form-control"
                             placeholder="Ingrese su contraseña"
-                            required maxLength="28" minLength="8"
+                            required maxLength="100" minLength="8"
                             value={password}
                             onChange={(event) => setPassword(event.target.value)} />
                           <i
@@ -160,7 +160,7 @@ const ResetPassword = () => {
                             name="password"
                             id="password"
                             placeholder="Confirme su contraseña"
-                            required maxLength="28" minLength="8"
+                            required maxLength="100" minLength="8"
                             value={confirmacion}
                             onChange={(event) => setConfirmacion(event.target.value)}
                             class="form-control" />
