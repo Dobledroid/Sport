@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Header from '../../Esquema/Header.js';
 import Footer from '../../Esquema/Footer';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 
 const Registro = () => {
   const [nombre, setNombre] = useState('');
@@ -107,8 +108,12 @@ const Registro = () => {
       });
 
       if (response.ok) {
-        console.log("Usuario registrado exitosamente");
-        
+        Swal.fire({
+          title: "Exito",
+          text: "Usuario registrado exitosamente",
+          icon: "success",
+          confirmButtonText: "Cerrar",
+        });
         navigate('/login');
       } else {
         console.log("Error al registrar usuario");

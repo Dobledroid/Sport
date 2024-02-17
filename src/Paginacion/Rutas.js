@@ -51,6 +51,7 @@ import Error404 from './Validaciones/Error404/Error404';
 
 
 import subirImagen from './Administracion/Productos/subirImagen';
+import MapComponent from './Validaciones/MapComponent/MapComponent';
 // import Error from './Validaciones/Error404/Error';
 const Rutas = () => {
   return (
@@ -93,6 +94,7 @@ const Rutas = () => {
 
 
         <Route path='/subirImagen' Component={ subirImagen }></Route>
+        <Route path='/map' Component={ MapComponent }></Route>
 
         <Route path='*' Component={ Error404 }></Route>
         {/* <Route path='/error-500' Component={ Error500 }></Route> */}

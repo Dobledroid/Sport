@@ -91,20 +91,9 @@ const Login = () => {
       });
       // console.log(response)
       if (!response.ok) {
-        let alertType = 'danger';
-        let errorMessage = '';
-        if (response.status === 400) {
-          errorMessage = 'Solicitud incorrecta. Por favor proporcione correo electrónico y contraseña';
-        }
-        else if (response.status === 401) {
-          errorMessage = 'Usuario no autorizado. Verifica tus credenciales.';
-        } else if (response.status === 500) {
-          errorMessage = 'Error interno del servidor. Por favor, inténtalo de nuevo más tarde.';
-        } else {
-          const errorData = await response.json();
-          errorMessage = errorData.msg || 'Error desconocido';
-        }
-        showAlert(alertType, errorMessage);
+        const errorData = await response.json();
+        console.log(errorData)
+        showAlert('danger', errorData.msg);
         return;
       }
 
