@@ -7,19 +7,85 @@ import Swal from 'sweetalert2';
 
 const Registro = () => {
   const [nombre, setNombre] = useState('');
+  const [nombreError, setNombreError] = useState('');
   const [primerApellido, setPrimerApellido] = useState('');
+  const [primerApellidoError, setPrimerApellidoError] = useState('');
   const [segundoApellido, setSegundoApellido] = useState('');
+  const [segundoApellidoError, setSegundoApellidoError] = useState('');
   const [email, setEmail] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [confirmarContrasena, setConfirmarContrasena] = useState('');
   const [alerta, setAlerta] = useState(null);
-  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar la contraseña
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Estado para mostrar/ocultar la confirmación de la contraseña
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
   const captcha = useRef(null);
 
+  const validarNombre = (value) => {
+    if (!value.trim()) {
+      setNombreError('¡Por favor, escriba su nombre!');
+      return false;
+    } else if (value.trim().length < 3) {
+      setNombreError('¡El nombre debe tener al menos 3 caracteres!');
+      return false;
+    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/.test(value.trim())) {
+      setNombreError('¡El nombre solo puede contener letras y espacios!');
+      return false;
+    } else {
+      setNombreError('');
+      return true;
+    }
+  };
+
+  const validarApellido = (value, apellido, setError) => {
+    if (!value.trim()) {
+      setError(`¡Por favor, escriba su ${apellido}!`);
+      return false;
+    } else if (value.trim().length < 3) {
+      setError(`¡El ${apellido} debe tener al menos 3 caracteres!`);
+      return false;
+    } else if (!/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/.test(value.trim())) {
+      setError(`¡El ${apellido} solo puede contener letras y espacios!`);
+      return false;
+    } else {
+      setError('');
+      return true;
+    }
+  };
+
+  const handleNombreChange = (e) => {
+    const inputValue = e.target.value;
+    setNombre(inputValue);
+    if (primerApellidoError || segundoApellidoError) {
+      validarApellido(primerApellido, "Apellido Paterno", setPrimerApellidoError);
+      validarApellido(segundoApellido, "Apellido Materno", setSegundoApellidoError);
+    } else {
+      const validacionNombre = validarNombre(inputValue);
+      if (validacionNombre) {
+        setAlerta(null); // Limpiar la alerta si la validación del nombre es exitosa
+      }
+    }
+  };
+  
+  const handlePrimerApellidoChange = (e) => {
+    const inputValue = e.target.value;
+    setPrimerApellido(inputValue);
+    const validacionApellido = validarApellido(inputValue, "Apellido Paterno", setPrimerApellidoError);
+    if (validacionApellido) {
+      setAlerta(null); // Limpiar la alerta si la validación del apellido paterno es exitosa
+    }
+  };
+  
+  const handleSegundoApellidoChange = (e) => {
+    const inputValue = e.target.value;
+    setSegundoApellido(inputValue);
+    const validacionApellido = validarApellido(inputValue, "Apellido Materno", setSegundoApellidoError);
+    if (validacionApellido) {
+      setAlerta(null); // Limpiar la alerta si la validación del apellido materno es exitosa
+    }
+  };
+
   const validarCorreoElectronico = (correo) => {
-    // Expresión regular para validar un correo electrónico
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(correo).toLowerCase());
   };
@@ -72,8 +138,15 @@ const Registro = () => {
       setAlerta('Por favor completa todos los campos.');
       return;
     }
+    const nombreValido = validarNombre(nombre);
+    const apellidoPaternoValido = validarApellido(primerApellido, "Apellido Paterno", setPrimerApellidoError);
+    const apellidoMaternoValido = validarApellido(segundoApellido, "Apellido Materno", setSegundoApellidoError);
 
-    // Validar el formato del correo electrónico
+    if (!nombreValido || !apellidoPaternoValido || !apellidoMaternoValido) {
+      // Si alguna de las validaciones no pasa, mostrar alerta y detener el registro
+      setAlerta('Por favor completa y verifica los campos marcados.');
+      return;
+    }
     if (!validarCorreoElectronico(email)) {
       setAlerta('Por favor ingrese una dirección de correo electrónico válida.');
       return;
@@ -84,12 +157,6 @@ const Registro = () => {
       setAlerta(passwordErrors.join(' '));
       return;
     }
-
-    // if (!captcha.current || !captcha.current.getValue()) {
-    //   console.log("El ReCAPTCHA no está completo");
-    //   setAlerta('Por favor completa el ReCAPTCHA.');
-    //   return;
-    // }
 
     console.log("Realizando solicitud de registro...");
     try {
@@ -143,18 +210,18 @@ const Registro = () => {
                     <form onSubmit={handleRegistro} className="row g-3 needs-validation" noValidate>
                       <div className="col-12">
                         <label htmlFor="yourName" className="form-label">Nombre</label>
-                        <input type="text" name="name" className="form-control" id="yourName" required value={nombre} onChange={(e) => setNombre(e.target.value)} />
-                        <div className="invalid-feedback">¡Por favor, escriba su nombre!</div>
+                        <input type="text" name="name" className={`form-control ${nombreError ? 'is-invalid' : ''}`} id="yourName" required value={nombre} onChange={handleNombreChange} />
+                        {nombreError && <div className="invalid-feedback">{nombreError}</div>}
                       </div>
                       <div className="col-12">
                         <label htmlFor="yourApePat" className="form-label">Apellido Paterno</label>
-                        <input type="text" name="ApePat" className="form-control" id="ApePat" required value={primerApellido} onChange={(e) => setPrimerApellido(e.target.value)} />
-                        <div className="invalid-feedback">¡Por favor, escriba su Apellido Paterno!</div>
+                        <input type="text" name="ApePat" className={`form-control ${primerApellidoError ? 'is-invalid' : ''}`} id="ApePat" required value={primerApellido} onChange={handlePrimerApellidoChange} />
+                        {primerApellidoError && <div className="invalid-feedback">{primerApellidoError}</div>}
                       </div>
                       <div className="col-12">
                         <label htmlFor="yourApeMat" className="form-label">Apellido Materno</label>
-                        <input type="text" name="ApeMat" className="form-control" id="ApeMat" required value={segundoApellido} onChange={(e) => setSegundoApellido(e.target.value)} />
-                        <div className="invalid-feedback">¡Por favor, escriba su Apellido Materno!</div>
+                        <input type="text" name="ApeMat" className={`form-control ${segundoApellidoError ? 'is-invalid' : ''}`} id="ApeMat" required value={segundoApellido} onChange={handleSegundoApellidoChange} />
+                        {segundoApellidoError && <div className="invalid-feedback">{segundoApellidoError}</div>}
                       </div>
                       <div className="col-12">
                         <label htmlFor="yourEmail" className="form-label">Correo Electrónico</label>
