@@ -27,8 +27,6 @@ const Login = () => {
 
   const showAlert = (type, message) => {
     setAlert({ type, message });
-    // Cierra la alerta después de 5 segundos (o ajusta según tu necesidad)
-    setTimeout(() => setAlert(null), 5000);
   };
 
   const toggleMostrarContrasena = () => {
