@@ -19,6 +19,10 @@ const MFA = () => {
       event.preventDefault();
     }
     // console.log("dataUser ", dataUser)
+    if(method ==='2'){
+      setAlert({type: 'danger', message: 'Opción no disponible por el momento.'});
+      return new Error('Opción no disponible por el momento.');
+    }
     try {
       const response = await fetch('http://localhost:3001/api/sendMethod', {
         method: 'POST',
