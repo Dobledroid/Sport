@@ -107,7 +107,7 @@ const Login2 = () => {
         showAlert('danger', 'Por favor, ingresa todos los campos.');
         return;
       }
-      const response = await fetch('http://localhost:3001/api/users/login', {
+      const response = await fetch('https://api-rest-sport.vercel.app/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -30,7 +30,7 @@ const Recuperacion = () => {
         showAlert('danger', 'Por favor, ingresa tu correo electrónico.');
         return;
       }
-      const response = await fetch(`http://localhost:3001/api/users/email/${encodeURIComponent(correo)}`);
+      const response = await fetch(`https://api-rest-sport.vercel.app/api/users/email/${encodeURIComponent(correo)}`);
       const userData = await response.json();
       console.log("userData", userData);
 

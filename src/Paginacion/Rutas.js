@@ -46,6 +46,8 @@ import EditarProducto from './Administracion/Productos/EditarProducto';
 // import Bodys from '../Esquema/Bodys';
 
 
+import ApiDataDisplay from './Administracion/Usuarios/ApiDataDisplay';
+
 import Error404 from './Validaciones/Error404/Error404';
 // import Error500 from './Validaciones/Error500/Error500';
 
@@ -95,6 +97,9 @@ const Rutas = () => {
 
         <Route path='/subirImagen' Component={ subirImagen }></Route>
         <Route path='/map' Component={ MapComponent }></Route>
+        
+        
+        <Route path='/apiUser' Component={ ApiDataDisplay }></Route>
 
         <Route path='*' Component={ Error404 }></Route>
         {/* <Route path='/error-500' Component={ Error500 }></Route> */}

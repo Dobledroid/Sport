@@ -80,7 +80,8 @@ const Login = () => {
         showAlert('danger', 'Por favor, ingresa todos los campos.');
         return;
       }
-      const response = await fetch('http://localhost:3001/api/users/login', {
+      // const response = await fetch('http://localhost:3010/api/users/login', {
+      const response = await fetch('https://api-rest-sport.vercel.app/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,11 +99,11 @@ const Login = () => {
       const userData = await response.json();
       // console.log(userData)
 
-      sessionStorage.setItem('userData', JSON.stringify(userData));
+      // sessionStorage.setItem('userData', JSON.stringify(userData));
 
-      setIsLoggedIn(true);
-      localStorage.setItem('isLoggedIn', true);
-      localStorage.setItem('user', JSON.stringify(userData));
+      // setIsLoggedIn(true);
+      // localStorage.setItem('isLoggedIn', true);
+      // localStorage.setItem('user', JSON.stringify(userData));
       navigate('/mfa', { state: userData });
     } catch (error) {
       // Manejar errores de red o conexión aquí...

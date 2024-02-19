@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from "../../Esquema/Header.js";
 import Footer from "../../Esquema/Footer.js";
 import Sidebar from "../../Esquema/Sidebar.js";
@@ -11,9 +12,37 @@ import iconAddress from "./images/address-svgrepo-com.svg";
 
 const Panel = () => {
   const [userImage, setUserImage] = React.useState(null);
-  const location = useLocation();
 
-  const dataUser = location.state;
+  const [user, setUser] = useState('');
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (loggedIn) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      setUser(user);
+      setIsLoggedIn(loggedIn);
+    } else {
+      navigate('/login');
+    }
+  }, [navigate]);
+
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+
+    // Eliminar la sesión del almacenamiento local
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('username');
+
+    navigate('/login');
+  };
+
   return (
     <>
       <Header />
@@ -27,8 +56,20 @@ const Panel = () => {
                   <UserProfile userImage={userImage} />
                 </div>
                 <div className="col second-col">
-                  <div>{dataUser.nombre} {dataUser.primerApellido} {dataUser.segundoApellido}</div>
-                  <p>{dataUser.correoElectronico}</p>
+                  {user.tipo == "2" ? (
+                    <>
+                      <h5>Bienvenido, rol usuario</h5>
+                      <button onClick={handleLogout} className='btn btn-warning'>Cerrar Sesión</button>
+                    </>
+                  ) : (
+                    <>
+                      <h5>Bienvenido, rol Admistrador</h5>
+                      <button onClick={handleLogout} className='btn btn-warning'>Cerrar Sesión</button>
+                    </>
+                  )}
+
+                  <div>{user.usuario} {user.primerApellido} {user.segundoApellido}</div>
+                  <p>{user.correo}</p>
                 </div>
               </div>
             </div>
@@ -39,7 +80,7 @@ const Panel = () => {
               <ul>
                 <li className="row my-3">
                   <div className="col">
-                  <UserProfile userImage={iconUserId} />
+                    <UserProfile userImage={iconUserId} />
                   </div>
                   <div className="col second-col">
                     <span>Información personal</span>
@@ -48,7 +89,7 @@ const Panel = () => {
                 </li>
                 <li className="row my-3">
                   <div className="col">
-                  <UserProfile userImage={iconUser} />
+                    <UserProfile userImage={iconUser} />
                   </div>
                   <div className="col">
                     <span>Datos de tu cuenta</span>
@@ -57,7 +98,7 @@ const Panel = () => {
                 </li>
                 <li className="row my-3">
                   <div className="col">
-                  <UserProfile userImage={iconAddress} />
+                    <UserProfile userImage={iconAddress} />
                   </div>
                   <div className="col">
                     <span>Direcciones</span>

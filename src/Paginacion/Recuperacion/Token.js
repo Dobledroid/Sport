@@ -23,7 +23,7 @@ const Token = () => {
     }
     console.log("dataUser ", dataUser)
     try {
-      const response = await fetch('http://localhost:3001/api/sendMethod', {
+      const response = await fetch('https://api-rest-sport.vercel.app/api/sendMethod', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ const Token = () => {
     event.preventDefault();
     try {
       const token = event.target.elements.token.value;
-      const response = await fetch('http://localhost:3001/api/validateToken', {
+      const response = await fetch('https://api-rest-sport.vercel.app/api/validateToken', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,8 +1,14 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import $ from 'jquery';
 
 const Header = () => {
+
+  const navigate = useNavigate();
+  // const { loggedIn, user, logout } = useContext(SessionContext);
+  const [user, setUser] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
     $(".humberger__open").on("click", function () {
       $(".humberger__menu__wrapper").addClass("show__humberger__menu__wrapper");
@@ -16,6 +22,16 @@ const Header = () => {
       $("body").removeClass("over_hid");
     });
   }, []);
+
+  useEffect(() => {
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (loggedIn) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      setUser(user);
+      setIsLoggedIn(loggedIn);
+    }
+  }, []);
+
   return (
     <>
       {/* Para telefonos */}
@@ -68,7 +84,7 @@ const Header = () => {
 
       {/* para pantallas grandes  */}
       <header class="header">
-        <div class="header__top">
+        {/* <div class="header__top">
           <div class="container bg-warning">
             <div class="row">
               <div class="col-lg-6 col-md-6">
@@ -103,7 +119,7 @@ const Header = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         <div class="container">
           <div class="row">
             <div class="col-lg-3">
@@ -135,12 +151,26 @@ const Header = () => {
                   <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
                   <li><Link to="/carrito"><i class="fa fa-shopping-bag"></i> <span>3</span></Link></li>
                 </ul>
-                <div class="header__top__right__auth">
-                    <Link to="/login"><i class="fa fa-user"></i> Login</Link>
-                  </div>
-                <div class="header__cart__price ms-4">item: <span>$150.00</span></div>
+                {isLoggedIn ? (
+                  <>
+                    <div class="header__top__right__auth">
+                      <Link to="/perfil"><i class="fa fa-user"></i> Ver mi perfil</Link>
+                    </div>
+                    <div class="header__cart__price ms-4">Bienvenido, <span>{user.usuario}</span> ...!</div>
+
+                  </>
+                ) : (
+                  <>
+                    <div class="header__top__right__auth">
+                      <Link to="/login"><i class="fa fa-user"></i> Login</Link>
+                    </div>
+                    <div class="header__cart__price ms-4">item: <span>$150.00</span></div>
+                  </>
+                )}
+
+
               </div>
-              
+
             </div>
           </div>
           <div class="humberger__open">

@@ -11,6 +11,7 @@ const MFA = () => {
   const [showResendButton, setShowResendButton] = useState(false); // Nuevo estado para mostrar el botón de reenviar código
   const [elapsedTime, setElapsedTime] = useState(0); // Nuevo estado para controlar el tiempo transcurrido
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const location = useLocation();
   const dataUser = location.state;
 
@@ -19,12 +20,13 @@ const MFA = () => {
       event.preventDefault();
     }
     // console.log("dataUser ", dataUser)
-    if(method ==='2'){
-      setAlert({type: 'danger', message: 'Opción no disponible por el momento.'});
+    if (method === '2') {
+      setAlert({ type: 'danger', message: 'Opción no disponible por el momento.' });
       return new Error('Opción no disponible por el momento.');
     }
     try {
-      const response = await fetch('http://localhost:3001/api/sendMethod', {
+      // const response = await fetch('http://localhost:3010/api/sendMethod', {
+      const response = await fetch('https://api-rest-sport.vercel.app/api/sendMethod', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,8 +58,8 @@ const MFA = () => {
     event.preventDefault();
     try {
       const token = event.target.elements.token.value;
-
-      const response = await fetch('http://localhost:3001/api/validateToken', {
+      // const response = await fetch('http://localhost:3010/api/validateToken', {
+      const response = await fetch('https://api-rest-sport.vercel.app/api/validateToken', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,11 +70,28 @@ const MFA = () => {
         }),
       });
       const data = await response.json();
+      console.log("data", data)
       if (!response.ok) {
         throw new Error(data.msg);
       }
 
-      navigate('/perfil',  { state: dataUser })
+      console.log("dataUser.correoElectronico", dataUser.correoElectronico)
+      const id = dataUser.ID_usuario;
+      // const loginResponse = await fetch('http://localhost:3010/api/users/', {
+        const loginResponse = await fetch(`https://api-rest-sport.vercel.app/api/users/${id}`);
+
+      const loginData = await loginResponse.json();
+
+      if (!loginResponse.ok) {
+        throw new Error(data.msg);
+      }
+      console.log("loginData", loginData)
+
+      const user = { usuario: loginData.nombre, correo:dataUser.correoElectronico, id: dataUser.ID_usuario, tipo: dataUser.ID_rol };
+      setIsLoggedIn(true);
+      localStorage.setItem('isLoggedIn', true);
+      localStorage.setItem('user', JSON.stringify(user));
+      navigate('/perfil', { state: user })
 
     } catch (error) {
       console.log(error)

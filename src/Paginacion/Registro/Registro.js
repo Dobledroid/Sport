@@ -160,7 +160,7 @@ const Registro = () => {
 
     console.log("Realizando solicitud de registro...");
     try {
-      const response = await fetch('http://localhost:3001/api/users/', {
+      const response = await fetch('https://api-rest-sport.vercel.app/api/users/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

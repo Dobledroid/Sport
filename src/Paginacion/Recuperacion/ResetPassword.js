@@ -74,7 +74,7 @@ const ResetPassword = () => {
       const data = location.state;
       // console.log("data ", data)
       if (validaciones()) {
-        const response = await fetch(`http://localhost:3001/api/users/update-password/${data.ID_usuario}`, {
+        const response = await fetch(`https://api-rest-sport.vercel.app/api/users/update-password/${data.ID_usuario}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
