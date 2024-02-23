@@ -21,7 +21,7 @@ const Token = () => {
     if (event && typeof event.preventDefault === 'function') {
       event.preventDefault();
     }
-    console.log("dataUser ", dataUser)
+    // console.log("dataUser ", dataUser)
     try {
       const response = await fetch('https://api-rest-sport.vercel.app/api/sendMethod', {
         method: 'POST',

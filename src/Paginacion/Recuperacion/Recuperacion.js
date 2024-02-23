@@ -32,7 +32,7 @@ const Recuperacion = () => {
       }
       const response = await fetch(`https://api-rest-sport.vercel.app/api/users/email/${encodeURIComponent(correo)}`);
       const userData = await response.json();
-      console.log("userData", userData);
+      // console.log("userData", userData);
 
       if (response.ok) {
         navigate('/validacion', { state: userData });

@@ -124,7 +124,7 @@ const Registro = () => {
   const handleRegistro = async (event) => {
     event.preventDefault();
 
-    console.log("Registrando usuario...");
+    // console.log("Registrando usuario...");
 
     if (
       nombre.trim() === '' ||
@@ -134,7 +134,7 @@ const Registro = () => {
       contrasena === '' ||
       confirmarContrasena === ''
     ) {
-      console.log("Faltan campos por completar");
+      // console.log("Faltan campos por completar");
       setAlerta('Por favor completa todos los campos.');
       return;
     }
@@ -158,8 +158,9 @@ const Registro = () => {
       return;
     }
 
-    console.log("Realizando solicitud de registro...");
+    // console.log("Realizando solicitud de registro...");
     try {
+      // const response = await fetch('http://localhost:3001/api/users/', {
       const response = await fetch('https://api-rest-sport.vercel.app/api/users/', {
         method: 'POST',
         headers: {
@@ -183,12 +184,12 @@ const Registro = () => {
         });
         navigate('/login');
       } else {
-        console.log("Error al registrar usuario");
+        // console.log("Error al registrar usuario");
         const errorData = await response.json();
         setAlerta(errorData.msg);
       }
     } catch (error) {
-      console.error('Error al crear usuario:', error);
+      // console.error('Error al crear usuario:', error);
       setAlerta('Error al crear usuario. Por favor, intenta nuevamente.');
     }
   };

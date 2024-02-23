@@ -75,7 +75,7 @@ const MFA = () => {
         throw new Error(data.msg);
       }
 
-      console.log("dataUser.correoElectronico", dataUser.correoElectronico)
+      // console.log("dataUser.correoElectronico", dataUser.correoElectronico)
       const id = dataUser.ID_usuario;
       // const loginResponse = await fetch('http://localhost:3010/api/users/', {
         const loginResponse = await fetch(`https://api-rest-sport.vercel.app/api/users/${id}`);
@@ -85,7 +85,7 @@ const MFA = () => {
       if (!loginResponse.ok) {
         throw new Error(data.msg);
       }
-      console.log("loginData", loginData)
+      // console.log("loginData", loginData)
 
       const user = { usuario: loginData.nombre, correo:dataUser.correoElectronico, id: dataUser.ID_usuario, tipo: dataUser.ID_rol };
       setIsLoggedIn(true);
